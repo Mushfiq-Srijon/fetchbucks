@@ -46,4 +46,22 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // A user has many expenses
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
+    }
+
+    // A user has many categories
+    public function categories()
+    {
+        return $this->hasMany(Category::class);
+    }
+
+    // A user has many budgets
+    public function budgets()
+    {
+        return $this->hasMany(Budget::class);
+    }
 }
