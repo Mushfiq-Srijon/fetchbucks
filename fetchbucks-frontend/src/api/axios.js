@@ -2,6 +2,7 @@ import axios from 'axios'
 
 const instance = axios.create({
   baseURL: 'http://127.0.0.1:8000/api',
+  validateStatus: (status) => status >= 200 && status < 300,
 })
 
 instance.interceptors.request.use((config) => {

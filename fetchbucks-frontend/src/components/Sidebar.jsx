@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import api from '../api/axios'
 
 const navItems = [
@@ -9,14 +9,13 @@ const navItems = [
 ]
 
 function Sidebar() {
-  const navigate = useNavigate()
 
   async function handleLogout() {
     try {
       await api.post('/logout')
     } catch (err) {}
     localStorage.removeItem('token')
-    navigate('/auth')
+    window.location.href = '/auth'
   }
 
   return (
@@ -65,8 +64,7 @@ function Sidebar() {
               }`
             }
           >
-            <span className="w-7 h-7 flex items-center justify-center rounded-md text-sm
-              bg-transparent">
+            <span className="w-7 h-7 flex items-center justify-center rounded-md text-sm bg-transparent">
               {item.icon}
             </span>
             {item.label}

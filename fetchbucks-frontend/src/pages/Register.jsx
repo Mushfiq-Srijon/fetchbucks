@@ -1,9 +1,7 @@
 import { useState } from 'react'
-// import { useNavigate } from 'react-router-dom'
 import api from '../api/axios'
 
 function Register({ onSuccess }) {
-//   const navigate = useNavigate()
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -21,19 +19,34 @@ function Register({ onSuccess }) {
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(form.email)) {
+      setError('Please enter a valid email address.')
+      return
+    }
+
     if (form.password !== form.password_confirmation) {
       setError('Passwords do not match.')
       return
     }
+
+    if (form.password.length < 8) {
+      setError('Password must be at least 8 characters.')
+      return
+    }
+
     setLoading(true)
     try {
       await api.post('/register', form)
       setSuccess(true)
-      setTimeout(() => {
-        onSuccess()
-      }, 2500)
+      setTimeout(() => onSuccess(), 2500)
     } catch (err) {
-      setError('Registration failed. Please check your details.')
+      const msg = err.response?.data?.message
+        || err.response?.data?.errors?.email?.[0]
+        || err.response?.data?.errors?.password?.[0]
+        || 'Registration failed. Please check your details.'
+      setError(msg)
     } finally {
       setLoading(false)
     }
@@ -47,7 +60,7 @@ function Register({ onSuccess }) {
           className="text-sm text-center rounded-xl px-3 py-3"
           style={{ color: '#4ade80', background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.2)' }}
         >
-          ✓ Account created! Redirecting to login...
+          ✓ Account created! Check your email to verify your account.
         </div>
       )}
 
@@ -61,9 +74,9 @@ function Register({ onSuccess }) {
       )}
 
       {[
-        { name: 'name', type: 'text', label: 'Full Name', placeholder: 'Your name' },
-        { name: 'email', type: 'email', label: 'Email', placeholder: 'you@example.com' },
-        { name: 'password', type: 'password', label: 'Password', placeholder: '••••••••' },
+        { name: 'name',                  type: 'text',     label: 'Full Name',        placeholder: 'Your name' },
+        { name: 'email',                 type: 'email',    label: 'Email',            placeholder: 'you@example.com' },
+        { name: 'password',              type: 'password', label: 'Password',         placeholder: '•••••••• (min 8 characters)' },
         { name: 'password_confirmation', type: 'password', label: 'Confirm Password', placeholder: '••••••••' },
       ].map((field) => (
         <div key={field.name}>
