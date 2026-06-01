@@ -9,12 +9,16 @@ use App\Http\Controllers\Api\DashboardController;
 
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login',    [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/verify-email', [AuthController::class, 'verifyEmail']);
+Route::post('/resend-verification', [AuthController::class, 'resendVerification']);
+Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/me',      [AuthController::class, 'me']);
+    Route::get('/me', [AuthController::class, 'me']);
     Route::apiResource('expenses', ExpenseController::class);
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('budgets', BudgetController::class);
