@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -180,5 +181,41 @@ class AuthController extends Controller
         $user->tokens()->delete();
 
         return response()->json(['message' => 'Password reset successfully! You can now log in.']);
+    }
+
+    // ── Google Redirect ───────────────────────────────────────────────────────
+    public function googleRedirect()
+    {
+        return Socialite::driver('google')
+            ->stateless()
+            ->redirect();
+    }
+
+    // ── Google Callback ───────────────────────────────────────────────────────
+    public function googleCallback()
+    {
+        try {
+            $googleUser = Socialite::driver('google')->stateless()->user();
+        } catch (\Exception $e) {
+            return redirect(env('FRONTEND_URL') . '/auth?error=google_failed');
+        }
+
+        // Find existing user or create new one
+        $user = User::where('email', $googleUser->getEmail())->first();
+
+        if (!$user) {
+            $user = User::create([
+                'name' => $googleUser->getName(),
+                'email' => $googleUser->getEmail(),
+                'password' => Hash::make(Str::random(32)), // random password, they'll use Google to login
+                'email_verified_at' => now(), // Google already verified their email
+            ]);
+        }
+
+        // Issue a Sanctum token
+        $token = $user->createToken('auth_token', ['*'], now()->addDays(30))->plainTextToken;
+
+        // Redirect to frontend with token
+        return redirect(env('FRONTEND_URL') . '/auth/google/callback?token=' . $token);
     }
 }

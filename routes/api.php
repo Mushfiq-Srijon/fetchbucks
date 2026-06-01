@@ -14,6 +14,8 @@ Route::post('/verify-email', [AuthController::class, 'verifyEmail']);
 Route::post('/resend-verification', [AuthController::class, 'resendVerification']);
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+Route::get('/auth/google', [AuthController::class, 'googleRedirect']);
+Route::get('/auth/google/callback', [AuthController::class, 'googleCallback']);
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
