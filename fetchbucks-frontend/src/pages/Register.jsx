@@ -74,9 +74,9 @@ function Register({ onSuccess }) {
       )}
 
       {[
-        { name: 'name',                  type: 'text',     label: 'Full Name',        placeholder: 'Your name' },
-        { name: 'email',                 type: 'email',    label: 'Email',            placeholder: 'you@example.com' },
-        { name: 'password',              type: 'password', label: 'Password',         placeholder: '•••••••• (min 8 characters)' },
+        { name: 'name', type: 'text', label: 'Full Name', placeholder: 'Your name' },
+        { name: 'email', type: 'email', label: 'Email', placeholder: 'you@example.com' },
+        { name: 'password', type: 'password', label: 'Password', placeholder: '•••••••• (min 8 characters)' },
         { name: 'password_confirmation', type: 'password', label: 'Confirm Password', placeholder: '••••••••' },
       ].map((field) => (
         <div key={field.name}>
@@ -115,27 +115,42 @@ function Register({ onSuccess }) {
       <div className="flex items-center gap-3 my-1">
         <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
         <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
-          or sign up with
+          or continue with
         </span>
         <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
       </div>
 
-      <div className="flex gap-2">
-        {['Google', 'Facebook', 'Twitter'].map((provider) => (
-          <button
-            key={provider}
-            type="button"
-            className="flex-1 py-2 rounded-xl text-xs font-medium border transition-all duration-200"
-            style={{
-              background: 'var(--surface)',
-              borderColor: 'var(--border)',
-              color: 'var(--text-dim)',
-            }}
-          >
-            {provider}
-          </button>
-        ))}
-      </div>
+      <button
+        type="button"
+        onClick={() => { window.location.href = 'http://localhost:8000/api/auth/google' }}
+        className="w-full py-2.5 rounded-xl text-sm font-medium border transition-all duration-200 flex items-center justify-center gap-2 google-btn"
+        style={{
+          background: 'var(--surface)',
+          borderColor: 'var(--border)',
+          color: 'var(--text-dim)',
+        }}
+      >
+        <svg width="16" height="16" viewBox="0 0 48 48">
+          <path fill="#EA4335" d="M24 9.5c3.14 0 5.95 1.08 8.17 2.85l6.08-6.08C34.5 3.02 29.56 1 24 1 14.82 1 7.07 6.48 3.64 14.18l7.08 5.5C12.4 13.02 17.73 9.5 24 9.5z" />
+          <path fill="#4285F4" d="M46.1 24.5c0-1.64-.15-3.22-.42-4.74H24v9h12.42c-.54 2.9-2.18 5.36-4.64 7.01l7.19 5.58C43.18 37.13 46.1 31.27 46.1 24.5z" />
+          <path fill="#FBBC05" d="M10.72 28.32A14.6 14.6 0 0 1 9.5 24c0-1.5.26-2.95.72-4.32l-7.08-5.5A23.93 23.93 0 0 0 0 24c0 3.86.92 7.5 2.56 10.72l8.16-6.4z" />
+          <path fill="#34A853" d="M24 47c5.56 0 10.22-1.84 13.63-5l-7.19-5.58c-1.89 1.27-4.31 2.02-6.44 2.02-6.27 0-11.6-3.52-13.28-8.68l-8.16 6.4C7.07 41.52 14.82 47 24 47z" />
+        </svg>
+        Continue with Google
+      </button>
+
+      <style>{`
+  .google-btn:hover {
+    background: rgba(66, 133, 244, 0.08) !important;
+    border-color: rgba(66, 133, 244, 0.4) !important;
+    color: #4285F4 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(66, 133, 244, 0.15);
+  }
+  .google-btn:active {
+    transform: translateY(0px);
+  }
+`}</style>
 
     </form>
   )

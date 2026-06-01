@@ -9,6 +9,7 @@ import VerifyEmail from './pages/VerifyEmail'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import ProtectedRoute from './components/ProtectedRoute'
+import GoogleCallback from './pages/GoogleCallback'
 
 function App() {
   const token = localStorage.getItem('token')
@@ -20,6 +21,7 @@ function App() {
       <Route path="/verify-email" element={<VerifyEmail />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/auth/google/callback" element={<GoogleCallback />} />
 
       <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
         <Route path="/dashboard" element={<Dashboard />} />
