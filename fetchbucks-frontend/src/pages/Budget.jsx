@@ -21,19 +21,6 @@ const injectStyles = () => {
     }
     .fb-fade-up { animation: fb-fadeUp 0.35s cubic-bezier(0.16,1,0.3,1) both; }
 
-    .fb-btn {
-      display:inline-flex; align-items:center; justify-content:center; gap:8px;
-      padding:13px 24px; border-radius:10px; border:none; width:100%;
-      font-size:15px; font-weight:600; cursor:pointer;
-      font-family:'Plus Jakarta Sans',sans-serif;
-      transition:transform 0.15s, box-shadow 0.15s, filter 0.15s;
-    }
-    .fb-btn-primary {
-      background:linear-gradient(135deg,#4f9cf9,#3b82f6);
-      color:#fff; box-shadow:0 4px 14px rgba(79,156,249,0.35);
-    }
-    .fb-btn-primary:hover { transform:translateY(-1px); filter:brightness(1.1); }
-
     .fb-month-btn {
       padding:10px 4px; border-radius:9px; font-size:14px; font-weight:500;
       cursor:pointer; background:transparent; border:1px solid transparent;
@@ -116,7 +103,7 @@ export default function Budget() {
   }).reverse()
 
   return (
-    <div style={{display:'flex',gap:28,alignItems:'flex-start'}}>
+    <div className="fb-page-cols" style={{display:'flex', gap:28, alignItems:'flex-start'}}>
 
       {/* ══════════════ LEFT COLUMN ══════════════ */}
       <div style={{flex:1,minWidth:0}}>
@@ -232,7 +219,7 @@ export default function Budget() {
       </div>
 
       {/* ══════════════ RIGHT COLUMN ══════════════ */}
-      <div style={{width:268,flexShrink:0,display:'flex',flexDirection:'column',gap:16,paddingTop:68}}>
+      <div className="fb-page-sidebar" style={{width:268,flexShrink:0,display:'flex',flexDirection:'column',gap:16,paddingTop:68}}>
 
         {/* Summary cards */}
         {[
