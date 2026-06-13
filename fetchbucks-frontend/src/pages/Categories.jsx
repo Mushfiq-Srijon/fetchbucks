@@ -208,7 +208,7 @@ export default function Categories() {
 
         {/* Category grid */}
         {categories.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '60px 24px', background: '#090e14', borderRadius: 16, border: '1px solid #0d1825' }}>
+          <div style={{ textAlign: 'center', padding: '60px 24px', background: '#090e14', borderRadius: 16, border: '1px solid #0d1825', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <div style={{ fontSize: 40, marginBottom: 14 }}>◈</div>
             <p style={{ color: '#3a5270', fontSize: 16, margin: 0, fontWeight: 500 }}>No categories yet</p>
             <p style={{ color: '#1f3050', fontSize: 14, marginTop: 6 }}>Create one to start organising your expenses.</p>
