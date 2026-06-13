@@ -32,3 +32,57 @@ input {
 input:focus {
   box-shadow: 0 0 0 3px var(--accent-glow);
 }
+
+/* ── FetchBucks shared component styles ── */
+.fb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: transform 0.15s, box-shadow 0.15s, filter 0.15s;
+  white-space: nowrap;
+}
+
+.fb-btn-primary {
+  background: linear-gradient(135deg, #4f9cf9, #3b82f6);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(79, 156, 249, 0.35);
+}
+
+.fb-btn-primary:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+  box-shadow: 0 6px 20px rgba(79, 156, 249, 0.45);
+}
+
+.fb-btn-ghost {
+  background: transparent;
+  color: #5a6a80;
+  border: 1px solid #1f2d3d !important;
+}
+
+.fb-btn-ghost:hover {
+  border-color: #2d4060 !important;
+  color: #8899aa;
+}
+
+/* Responsive: collapse two-column page layouts on mobile */
+@media (max-width: 1023px) {
+
+  /* Budget, Expenses, Categories: stack columns */
+  .fb-page-cols {
+    flex-direction: column !important;
+  }
+
+  .fb-page-sidebar {
+    width: 100% !important;
+    flex-shrink: 1 !important;
+    padding-top: 0 !important;
+  }
+}

@@ -23,25 +23,6 @@ const injectStyles = () => {
     .fb-slide-down { animation: fb-slideDown 0.28s cubic-bezier(0.16,1,0.3,1) both; }
     .fb-fade-up    { animation: fb-fadeUp   0.32s cubic-bezier(0.16,1,0.3,1) both; }
 
-    .fb-btn {
-      display:inline-flex; align-items:center; gap:8px;
-      padding:11px 20px; border-radius:10px; border:none;
-      font-size:14px; font-weight:600; cursor:pointer;
-      font-family:'Plus Jakarta Sans',sans-serif;
-      transition:transform 0.15s, box-shadow 0.15s, filter 0.15s;
-      white-space:nowrap;
-    }
-    .fb-btn-primary {
-      background:linear-gradient(135deg,#4f9cf9,#3b82f6);
-      color:#fff; box-shadow:0 4px 14px rgba(79,156,249,0.35);
-    }
-    .fb-btn-primary:hover { transform:translateY(-1px); filter:brightness(1.1); }
-    .fb-btn-ghost {
-      background:transparent; color:#5a6a80;
-      border:1px solid #1f2d3d !important;
-    }
-    .fb-btn-ghost:hover { border-color:#2d4060 !important; color:#8899aa; }
-
     .fb-input {
       width:100%; background:#080c12; border:1px solid #1a2535;
       border-radius:10px; padding:12px 16px; font-size:15px;
@@ -128,7 +109,7 @@ export default function Categories() {
   if (loading) return <div style={{color:'#3a5270',padding:40,fontSize:16}}>Loading…</div>
 
   return (
-    <div style={{display:'flex',gap:28,alignItems:'flex-start'}}>
+    <div className="fb-page-cols" style={{display:'flex', gap:28, alignItems:'flex-start'}}>
 
       {/* ══════════════ LEFT COLUMN ══════════════ */}
       <div style={{flex:1,minWidth:0}}>
@@ -260,7 +241,7 @@ export default function Categories() {
       </div>
 
       {/* ══════════════ RIGHT COLUMN ══════════════ */}
-      <div style={{width:268,flexShrink:0,display:'flex',flexDirection:'column',gap:16}}>
+      <div className="fb-page-sidebar" style={{width:268,flexShrink:0,display:'flex',flexDirection:'column',gap:16}}>
 
         {/* Stats */}
         {[

@@ -26,27 +26,6 @@ const injectStyles = () => {
     .fb-slide-down { animation: fb-slideDown 0.28s cubic-bezier(0.16,1,0.3,1) both; }
     .fb-fade-up    { animation: fb-fadeUp 0.32s cubic-bezier(0.16,1,0.3,1) both; }
 
-    .fb-btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 11px 20px; border-radius: 10px;
-      font-size: 14px; font-weight: 600; cursor: pointer;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      transition: transform 0.15s, box-shadow 0.15s, filter 0.15s;
-      white-space: nowrap; border: none;
-    }
-    .fb-btn-primary {
-      background: linear-gradient(135deg,#4f9cf9,#3b82f6);
-      color:#fff;
-      box-shadow: 0 4px 14px rgba(79,156,249,0.35);
-    }
-    .fb-btn-primary:hover { transform:translateY(-1px); filter:brightness(1.1); box-shadow:0 6px 20px rgba(79,156,249,0.45); }
-    .fb-btn-ghost {
-      background: transparent;
-      color: #5a6a80;
-      border: 1px solid #1f2d3d !important;
-    }
-    .fb-btn-ghost:hover { border-color:#2d4060 !important; color:#8899aa; }
-
     .fb-input {
       width:100%; background:#080c12; border:1px solid #1a2535;
       border-radius:10px; padding:12px 16px; font-size:15px;
@@ -59,12 +38,20 @@ const injectStyles = () => {
     .fb-input::-webkit-calendar-picker-indicator { filter:invert(0.4); cursor:pointer; }
 
     .fb-row {
-      display:flex; align-items:center; gap:14px;
-      padding:15px 20px; border-bottom:1px solid #0d1825;
-      transition:background 0.15s;
+      display:flex; align-items:flex-start; gap:12px;
+      padding:14px 16px; border-bottom:1px solid #0d1825;
+      transition:background 0.15s; flex-wrap:wrap;
     }
     .fb-row:last-child { border-bottom:none; }
     .fb-row:hover { background:rgba(79,156,249,0.025); }
+
+    .fb-col-header {
+      display: none;
+    }
+    @media (min-width: 768px) {
+      .fb-col-header { display: grid; grid-template-columns: 1fr 120px 120px; }
+      .fb-row { flex-wrap: nowrap; align-items: center; }
+    }
 
     .fb-icon-tile {
       width:40px; height:40px; border-radius:10px; flex-shrink:0;
@@ -161,7 +148,7 @@ export default function Expenses() {
   if (loading) return <div style={{color:'#3a5270',padding:40,fontSize:16}}>Loading…</div>
 
   return (
-    <div style={{display:'flex',gap:28,alignItems:'flex-start'}}>
+    <div className="fb-page-cols" style={{display:'flex', gap:28, alignItems:'flex-start'}}>
 
       {/* ══════════════ LEFT COLUMN ══════════════ */}
       <div style={{flex:1,minWidth:0}}>
@@ -213,9 +200,11 @@ export default function Expenses() {
 
         {/* List */}
         <div className="fb-list-card">
-          {/* Column headers */}
-          <div style={{display:'grid',gridTemplateColumns:'1fr 130px 120px 80px 80px',padding:'11px 20px',borderBottom:'1px solid #0d1825',fontSize:12,fontWeight:600,color:'#1f3050',textTransform:'uppercase',letterSpacing:'0.07em'}}>
-            <span>Description</span><span>Category</span><span style={{textAlign:'right'}}>Amount</span><span/><span/>
+          {/* Column headers — desktop only */}
+          <div className="fb-col-header" style={{padding:'11px 20px',borderBottom:'1px solid #0d1825',fontSize:12,fontWeight:600,color:'#1f3050',textTransform:'uppercase',letterSpacing:'0.07em'}}>
+            <span>Description</span>
+            <span>Category</span>
+            <span style={{textAlign:'right'}}>Amount</span>
           </div>
           {expenses.length===0 ? (
             <div style={{textAlign:'center',padding:'56px 24px'}}>
@@ -226,22 +215,26 @@ export default function Expenses() {
           ) : expenses.map((exp,i)=>{
             const cat=categories.find(c=>c.id===exp.category_id)
             return (
-              <div key={exp.id} className="fb-row fb-fade-up" style={{animationDelay:`${i*0.04}s`,display:'grid',gridTemplateColumns:'1fr 130px 120px 80px 80px',alignItems:'center',gap:14}}>
-                <div style={{display:'flex',alignItems:'center',gap:12,minWidth:0}}>
+              <div key={exp.id} className="fb-row fb-fade-up" style={{animationDelay:`${i*0.04}s`}}>
+                <div style={{display:'flex',alignItems:'center',gap:12,minWidth:0,flex:'1 1 320px'}}>
                   <div className="fb-icon-tile" style={{background:cat?.color?`${cat.color}18`:'#131920',border:`1px solid ${cat?.color?`${cat.color}28`:'#1a2535'}`}}>💸</div>
                   <div style={{minWidth:0}}>
                     <div style={{fontSize:15,fontWeight:600,color:'#c8d8e8',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{exp.title}</div>
-                    <div style={{fontSize:13,color:'#2d4060',marginTop:3}}>{formatDate(exp.date)}{exp.note?` · ${exp.note}`:''}</div>
+                    <div style={{fontSize:13,color:'#2d4060',marginTop:3,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>
+                      {formatDate(exp.date)}{exp.note?` · ${exp.note}`:''}
+                    </div>
                   </div>
                 </div>
-                <div>
+                <div style={{flex:'0 0 130px',minWidth:120}}>
                   {cat
                     ? <span className="fb-tag" style={{background:`${cat.color}18`,color:cat.color,border:`1px solid ${cat.color}28`}}>{cat.name}</span>
                     : <span className="fb-tag" style={{background:'#131920',color:'#2d4060',border:'1px solid #1a2535'}}>None</span>}
                 </div>
-                <div style={{textAlign:'right',fontSize:16,fontWeight:700,color:'#e8edf5',letterSpacing:'-0.3px'}}>{taka(exp.amount)}</div>
-                <button className="fb-act fb-act-edit" onClick={()=>openEdit(exp)}>Edit</button>
-                <button className="fb-act fb-act-del" onClick={()=>handleDelete(exp.id)}>Delete</button>
+                <div style={{flex:'0 0 120px',minWidth:90,textAlign:'right',fontSize:16,fontWeight:700,color:'#e8edf5',letterSpacing:'-0.3px'}}>{taka(exp.amount)}</div>
+                <div style={{display:'flex',gap:8,flex:'0 0 auto',flexWrap:'wrap',justifyContent:'flex-end',minWidth:0}}>
+                  <button className="fb-act fb-act-edit" onClick={()=>openEdit(exp)}>Edit</button>
+                  <button className="fb-act fb-act-del" onClick={()=>handleDelete(exp.id)}>Delete</button>
+                </div>
               </div>
             )
           })}
@@ -249,7 +242,7 @@ export default function Expenses() {
       </div>
 
       {/* ══════════════ RIGHT COLUMN ══════════════ */}
-      <div style={{width:280,flexShrink:0,display:'flex',flexDirection:'column',gap:16}}>
+      <div className="fb-page-sidebar" style={{width:280,flexShrink:0,display:'flex',flexDirection:'column',gap:16}}>
 
         {/* Stat cards */}
         {[
