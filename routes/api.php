@@ -16,6 +16,7 @@ Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 Route::get('/auth/google', [AuthController::class, 'googleRedirect']);
 Route::get('/auth/google/callback', [AuthController::class, 'googleCallback']);
+Route::get('/ping', fn() => response()->json(['status' => 'ok']));
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
