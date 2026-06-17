@@ -74,8 +74,6 @@ input:focus {
 
 /* Responsive: collapse two-column page layouts on mobile */
 @media (max-width: 1023px) {
-
-  /* Budget, Expenses, Categories: stack columns */
   .fb-page-cols {
     flex-direction: column !important;
   }
@@ -84,5 +82,11 @@ input:focus {
     width: 100% !important;
     flex-shrink: 1 !important;
     padding-top: 0 !important;
+  }
+
+  /* Fix budget horizontal scroll on mobile */
+  .fb-page-cols>div {
+    min-width: 0 !important;
+    max-width: 100% !important;
   }
 }

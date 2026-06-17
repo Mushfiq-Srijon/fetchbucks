@@ -96,11 +96,11 @@ export default function Budget() {
   const isOver    = remaining < 0
   const barColor  = pct>85 ? '#f43f5e' : pct>60 ? '#f97316' : '#4f9cf9'
 
-  // History: past 6 months for the mini chart on the right
-  const prevMonths = Array.from({length:5},(_,i)=>{
-    const d = new Date(year, month-2-i, 1)
-    return { label: MONTHS[d.getMonth()].slice(0,3), month: d.getMonth()+1, year: d.getFullYear() }
-  }).reverse()
+  // Days left: only meaningful for current month; past = 0, future = full month
+  const isCurrentMonth = month === now.getMonth()+1 && year === now.getFullYear()
+  const isPastMonth    = year < now.getFullYear() || (year === now.getFullYear() && month < now.getMonth()+1)
+  const daysInMonth    = new Date(year, month, 0).getDate()
+  const daysLeft       = isPastMonth ? 0 : isCurrentMonth ? daysInMonth - now.getDate() : daysInMonth
 
   return (
     <div className="fb-page-cols" style={{display:'flex', gap:28, alignItems:'flex-start'}}>
@@ -163,11 +163,9 @@ export default function Budget() {
               </div>
             </div>
 
-            {/* Progress block — visible once budget exists */}
+            {/* Progress block */}
             {existing && !loading && (
               <div style={{background:'#080c12',borderRadius:12,padding:'18px 20px',marginBottom:22,border:'1px solid #0d1825'}}>
-
-                {/* Bar */}
                 <div style={{display:'flex',justifyContent:'space-between',marginBottom:10}}>
                   <span style={{fontSize:14,color:'#3a5270',fontWeight:500}}>Spent so far</span>
                   <span style={{fontSize:14,fontWeight:700,color:isOver?'#f43f5e':'#e8edf5'}}>{pct.toFixed(0)}%</span>
@@ -182,8 +180,6 @@ export default function Budget() {
                     transition:'width 0.5s cubic-bezier(0.16,1,0.3,1)',
                   }}/>
                 </div>
-
-                {/* Three stats */}
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:12}}>
                   {[
                     {label:'Budget',   val:taka(budgetNum), color:'#4f9cf9'},
@@ -196,7 +192,6 @@ export default function Budget() {
                     </div>
                   ))}
                 </div>
-
                 {isOver && (
                   <div style={{marginTop:14,padding:'10px 14px',borderRadius:9,background:'rgba(244,63,94,0.08)',border:'1px solid rgba(244,63,94,0.2)',fontSize:14,color:'#f87171',textAlign:'center'}}>
                     ⚠ You've exceeded this month's budget
@@ -205,27 +200,27 @@ export default function Budget() {
               </div>
             )}
 
-            {/* Feedback */}
             {error && <div style={{marginBottom:16,padding:'10px 14px',borderRadius:8,background:'rgba(248,113,113,0.08)',border:'1px solid rgba(248,113,113,0.2)',fontSize:14,color:'#f87171'}}>{error}</div>}
             {saved  && <div style={{marginBottom:16,padding:'10px 14px',borderRadius:8,background:'rgba(34,197,94,0.08)',border:'1px solid rgba(34,197,94,0.2)',fontSize:14,color:'#4ade80',display:'flex',alignItems:'center',gap:8}}>
               <span>✓</span> Budget saved for {MONTHS[month-1]} {year}!
             </div>}
 
-            <button className="fb-btn fb-btn-primary" onClick={handleSave}>
-              {existing ? `Update ${MONTHS[month-1]} Budget` : `Set ${MONTHS[month-1]} Budget`}
-            </button>
+            {/* Centered update button */}
+            <div style={{display:'flex',justifyContent:'center'}}>
+              <button className="fb-btn fb-btn-primary" onClick={handleSave}>
+                {existing ? `Update ${MONTHS[month-1]} Budget` : `Set ${MONTHS[month-1]} Budget`}
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
       {/* ══════════════ RIGHT COLUMN ══════════════ */}
       <div className="fb-page-sidebar" style={{width:268,flexShrink:0,display:'flex',flexDirection:'column',gap:16,paddingTop:68}}>
-
-        {/* Summary cards */}
         {[
-          {label:'This Month\'s Budget', value: existing?taka(budgetNum):'Not set', accent:'#4f9cf9'},
-          {label:'Spent This Month',     value: taka(spent),                        accent: spent>budgetNum&&budgetNum>0?'#f43f5e':'#10b981'},
-          {label:'Days Left in Month',   value: new Date(year,month,0).getDate()-now.getDate()+'d', accent:'#8b5cf6'},
+          {label:"This Month's Budget", value: existing?taka(budgetNum):'Not set', accent:'#4f9cf9'},
+          {label:'Spent This Month',    value: taka(spent), accent: spent>budgetNum&&budgetNum>0?'#f43f5e':'#10b981'},
+          {label:'Days Left in Month',  value: isPastMonth ? 'Month ended' : `${daysLeft}d`, accent:'#8b5cf6'},
         ].map(({label,value,accent})=>(
           <div key={label} className="fb-stat-card">
             <div style={{position:'absolute',top:0,left:0,right:0,height:2,background:accent,borderRadius:'14px 14px 0 0'}}/>
@@ -234,7 +229,6 @@ export default function Budget() {
           </div>
         ))}
 
-        {/* Tip */}
         <div style={{padding:'18px 20px',borderRadius:14,background:'#0d1117',border:'1px solid #111c27'}}>
           <div style={{fontSize:12,fontWeight:600,textTransform:'uppercase',letterSpacing:'0.06em',color:'#3a5270',marginBottom:10}}>Tip</div>
           <p style={{fontSize:14,color:'#5a6a80',margin:0,lineHeight:1.6}}>
